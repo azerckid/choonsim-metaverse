@@ -14,7 +14,6 @@ function ShowKeys(props) {
     (event) => {
       keyDisplayQueue.down(event.key);
       setKeyDown(true);
-      console.log(pressedKeys);
       setPressedKeys(event.key);
       if (event.shiftKey) {
       } else {

@@ -9,6 +9,7 @@ import styled from "styled-components";
 import { Suspense } from "react";
 import InputKeys from "./components/InputKeys";
 import { RecoilRoot } from "recoil";
+import Controls from "./components/Controls";
 
 const Container = styled.div`
   width: 100vw;
@@ -21,15 +22,16 @@ function App() {
       <h1>Hello, world!</h1>
       <Canvas
         shadows
-        camera={{
-          position: [-1, 2, 2],
-          fov: 60,
-          near: 1,
-          far: 1000,
-        }}
+        // camera={{
+        //   position: [-1, 2, 2],
+        //   fov: 60,
+        //   near: 1,
+        //   far: 1000,
+        // }}
       >
         <RecoilRoot>
           {/* <CameraHelper></CameraHelper> */}
+          <Controls />
           <ambientLight />
           <pointLight position={[10, 10, 10]} intensity={1} castShadow />
           <directionalLight

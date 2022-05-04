@@ -1,15 +1,18 @@
+import * as THREE from "three";
 import { useFrame, useThree } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
 import React, { useRef } from "react";
 import { PerspectiveCamera } from "three";
-import { useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { action, playerPosition } from "./atoms";
 
 import { A, D, DIRECTIONS, S, W } from "./utils";
 
 function Controls(props) {
+  //
   const animation = useRecoilValue(action);
-  const modelPosition = useRecoilValue(playerPosition);
+  const [modelPosition, setModelPosition] = useRecoilState(playerPosition);
+  //
   const controls = useRef();
   const {
     gl: { domElement },
@@ -20,14 +23,32 @@ function Controls(props) {
     0.1,
     1000
   );
-  camera.position.set(0, 5, 5);
+  camera.position.set(0, 10, 5);
 
   function update(delta, keysPressed) {
     // const directionPressed = DIRECTIONS.some((key) => keysPressed[key] == true);
+    if (animation === "Run") {
+      console.log(animation);
+      setModelPosition({
+        x: modelPosition.x + 0.1,
+        y: modelPosition.y,
+        z: modelPosition.z,
+      });
+      console.log("modelPosition", modelPosition);
+    }
   }
 
   useFrame(() => {
     update();
+    if (animation === "Run") {
+      console.log(animation);
+      setModelPosition({
+        x: modelPosition.x,
+        y: modelPosition.y,
+        z: modelPosition.z + 0.005,
+      });
+      console.log("modelPosition", modelPosition);
+    }
     controls.current.update();
   });
 
