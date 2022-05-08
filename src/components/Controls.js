@@ -76,13 +76,9 @@ function Controls(props) {
         z: modelPosition.z - moveZ,
       });
 
-      updateCameraTarget(moveX, moveZ);
-    }
-    function updateCameraTarget(moveX, moveZ) {
-      // move camera
+      // updateCameraTarget(moveX, moveZ);
       camera.position.x -= moveX;
       camera.position.z -= moveZ;
-
       // update camera target
       cameraTarget.x = modelPosition.x;
       cameraTarget.y = modelPosition.y + 1;
@@ -103,6 +99,7 @@ function Controls(props) {
         maxDistance={1}
         enablePan={false}
         maxPolarAngle={Math.PI / 2 - 0.2}
+        minPolarAngle={Math.PI / 2 - 0.8}
         enableZoom={true}
       />
     </>
