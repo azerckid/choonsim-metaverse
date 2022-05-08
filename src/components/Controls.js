@@ -30,14 +30,14 @@ function Controls(props) {
     gl: { domElement },
   } = useThree();
 
-  camera.position.set(0, 10, 5);
+  // camera.position.set(0, 10, 5);
 
   let walkDirection = new THREE.Vector3();
   let rotateAngle = new THREE.Vector3(0, 1, 0);
   let rotateQuarternion = new THREE.Quaternion();
   let cameraTarget = new THREE.Vector3();
   const runVelocity = 5;
-  const walkVelocity = 0.01;
+  const walkVelocity = 0.05;
 
   useFrame(() => {
     if (animation === "Run") {
@@ -74,17 +74,17 @@ function Controls(props) {
       const moveX = walkDirection.x * velocity;
       const moveZ = walkDirection.z * velocity;
       setModelPosition({
-        x: modelPosition.x + moveX,
+        x: modelPosition.x - moveX,
         y: modelPosition.y,
-        z: modelPosition.z + moveZ,
+        z: modelPosition.z - moveZ,
       });
 
       updateCameraTarget(moveX, moveZ);
     }
     function updateCameraTarget(moveX, moveZ) {
       // move camera
-      camera.position.x += moveX;
-      camera.position.z += moveZ;
+      camera.position.x -= moveX;
+      camera.position.z -= moveZ;
 
       // update camera target
       cameraTarget.x = modelPosition.x;

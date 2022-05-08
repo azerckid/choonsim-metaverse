@@ -46,13 +46,15 @@ function InputKeys(props) {
   console.log("pressedKeys-W", pressedKeys[W]);
   //
   function directionOffsetf(pressedKeys) {
-    let directionOffset = 0; // w
+    let directionOffset = 3.14; // w
 
     if (pressedKeys[W]) {
       if (pressedKeys[A]) {
         directionOffset = Math.PI / 4; // w+a
       } else if (pressedKeys[D]) {
         directionOffset = -Math.PI / 4; // w+d
+      } else {
+        directionOffset = -Math.PI; // w
       }
     } else if (pressedKeys[S]) {
       if (pressedKeys[A]) {
@@ -60,12 +62,12 @@ function InputKeys(props) {
       } else if (pressedKeys[D]) {
         directionOffset = -Math.PI / 4 - Math.PI / 2; // s+d
       } else {
-        directionOffset = Math.PI; // s
+        directionOffset = 0; // sdd
       }
     } else if (pressedKeys[A]) {
-      directionOffset = Math.PI / 2; // a
+      directionOffset = -Math.PI / 2; // a
     } else if (pressedKeys[D]) {
-      directionOffset = -Math.PI / 2; // d
+      directionOffset = Math.PI / 2; // d
     }
 
     return directionOffset;
