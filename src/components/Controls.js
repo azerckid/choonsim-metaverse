@@ -99,7 +99,7 @@ function Controls(props) {
         maxDistance={1}
         enablePan={false}
         maxPolarAngle={Math.PI / 2 - 0.2}
-        minPolarAngle={Math.PI / 2 - 0.8}
+        minPolarAngle={Math.PI / 2 - 0.6}
         enableZoom={true}
       />
     </>
