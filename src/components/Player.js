@@ -6,7 +6,6 @@ import {
   isPress,
   action,
   playerPosition,
-  keyPressed,
   rotateQuarternionValue,
 } from "./atoms";
 import Controls from "./Controls";
@@ -19,14 +18,12 @@ function Player(props) {
   const model = useRef();
   //
   const press = useRecoilValue(isPress);
+
   //
-  const [pressedKeys, setPressedKeys] = useRecoilState(keyPressed);
-  //
-  const [playPosition, setPlayPosition] = useRecoilState(playerPosition);
+  const playPosition = useRecoilValue(playerPosition);
   //
   const [animation, setAnimation] = useRecoilState(action);
   //
-  const keysPressed = {};
 
   useFrame(() => {
     if (press) {

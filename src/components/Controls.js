@@ -2,7 +2,6 @@ import * as THREE from "three";
 import { useFrame, useThree } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
 import React, { useRef } from "react";
-import { PerspectiveCamera } from "three";
 import { useRecoilState, useRecoilValue } from "recoil";
 import {
   action,
@@ -11,10 +10,9 @@ import {
   rotateQuarternionValue,
 } from "./atoms";
 
-import { A, D, DIRECTIONS, S, W } from "./utils";
-
 function Controls(props) {
   //
+  // eslint-disable-next-line
   const [rotateQuarternionV, setRotateQuarternionV] = useRecoilState(
     rotateQuarternionValue
   );
@@ -36,7 +34,6 @@ function Controls(props) {
   let rotateAngle = new THREE.Vector3(0, 1, 0);
   let rotateQuarternion = new THREE.Quaternion();
   let cameraTarget = new THREE.Vector3();
-  const runVelocity = 5;
   const walkVelocity = 0.05;
 
   useFrame(() => {
@@ -100,10 +97,10 @@ function Controls(props) {
       <OrbitControls
         ref={controls}
         args={[camera, domElement]}
-        autoRotateSpeed={0.5}
+        // autoRotateSpeed={0.5}
         enableDamping={true}
         minDistance={5}
-        maxDistance={15}
+        maxDistance={1}
         enablePan={false}
         maxPolarAngle={Math.PI / 2 - 0.2}
         enableZoom={true}

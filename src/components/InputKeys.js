@@ -1,6 +1,7 @@
 import { useRecoilState } from "recoil";
 import { KeyDisplay } from "./utils.js";
 import { directionOffsetFunction, isPress, keyPressed } from "./atoms.js";
+// eslint-disable-next-line
 import { A, D, DIRECTIONS, S, W } from "./utils";
 
 function InputKeys(props) {
