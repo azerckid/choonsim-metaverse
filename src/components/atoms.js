@@ -23,3 +23,13 @@ export const playerPosition = atom({
     z: 0,
   },
 });
+
+export const directionOffsetFunction = atom({
+  key: "directionOffset",
+  default: 0,
+});
+
+export const rotateQuarternionValue = atom({
+  key: "rotateQuarternionValue",
+  default: {},
+});

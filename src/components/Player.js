@@ -1,28 +1,42 @@
 import { useFrame } from "@react-three/fiber";
-import React, { useEffect, useRef } from "react";
+import React, { useRef } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { isPress, action, playerPosition } from "./atoms";
+
+import {
+  isPress,
+  action,
+  playerPosition,
+  keyPressed,
+  rotateQuarternionValue,
+} from "./atoms";
 import Controls from "./Controls";
 import Model from "./GLTF/Michel.js";
 
 function Player(props) {
+  //
+  const rotateQuarternion = useRecoilValue(rotateQuarternionValue);
+  //
   const model = useRef();
+  //
+  const press = useRecoilValue(isPress);
+  //
+  const [pressedKeys, setPressedKeys] = useRecoilState(keyPressed);
+  //
   const [playPosition, setPlayPosition] = useRecoilState(playerPosition);
   //
   const [animation, setAnimation] = useRecoilState(action);
-  const press = useRecoilValue(isPress);
+  //
+  const keysPressed = {};
 
-  useEffect(() => {
+  useFrame(() => {
     if (press) {
       setAnimation("Run");
     } else {
       setAnimation("Idle");
     }
-  }, [press, animation]);
-
-  useFrame(() => {
-    console.log("playPosition", playPosition);
-    console.log("modelPosition", model.current.position);
+    // console.log("playPosition", playPosition);
+    // console.log("modelPosition", model.current.position);
+    console.log("rotateQuarternion", rotateQuarternion);
   });
 
   return (
