@@ -11,6 +11,8 @@ import InputKeys from "./components/InputKeys";
 import { RecoilRoot } from "recoil";
 // import Controls from "./components/Controls";
 
+import ReactAudioPlayer from "react-audio-player";
+
 const Container = styled.div`
   width: 100vw;
   height: 100vh;
@@ -19,12 +21,20 @@ const Container = styled.div`
 function App() {
   return (
     <Container>
-      <h1>Hello, world!</h1>
+      <h1>Hello, world! "TOM BODY" I_DLE</h1>
+      <ReactAudioPlayer
+        preload="auto"
+        src="g_i_dle_tomboy.ogg"
+        autoPlay={true}
+        controls={true}
+        volume={0.05}
+      ></ReactAudioPlayer>
       <Canvas shadows>
         <RecoilRoot>
           {/* <CameraHelper></CameraHelper> */}
 
           {/* <Controls /> */}
+
           <ambientLight />
           <pointLight position={[10, 10, 10]} intensity={0.5} castShadow />
           <directionalLight
