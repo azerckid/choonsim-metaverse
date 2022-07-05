@@ -12,7 +12,7 @@ export const keyPressed = atom({
 
 export const action = atom({
   key: "action",
-  default: "Idle",
+  default: "Run",
 });
 
 export const playerPosition = atom({

@@ -6,12 +6,12 @@ import { TextureLoader, RepeatWrapping } from "three";
 function Plane(props) {
   const placeholderMap = useLoader(TextureLoader, placeholder);
   placeholderMap.wrapS = placeholderMap.wrapT = RepeatWrapping;
-  placeholderMap.repeat.x = placeholderMap.repeat.y = 200;
+  placeholderMap.repeat.x = placeholderMap.repeat.y = 10;
 
   return (
     <group>
       <mesh rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
-        <planeGeometry attach="geometry" args={[1000, 1000]} />
+        <planeGeometry attach="geometry" args={[50, 50]} />
         <meshStandardMaterial
           attach="material"
           color={"teal"}
