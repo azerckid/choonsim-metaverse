@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useRecoilState } from "recoil";
-import { directionOffsetFunction, keyPressed } from "./atoms.js";
+import { directionOffsetFunction, keyPressed } from "../../recoil.js";
 // eslint-disable-next-line
 
 function InputKeys(props) {

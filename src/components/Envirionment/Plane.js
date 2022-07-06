@@ -1,6 +1,6 @@
 import React from "react";
 import { useLoader } from "@react-three/fiber";
-import placeholder from "./images/placeholder.png";
+import placeholder from "../images/placeholder.png";
 import { TextureLoader, RepeatWrapping } from "three";
 
 function Plane(props) {

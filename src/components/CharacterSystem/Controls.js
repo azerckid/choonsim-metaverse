@@ -8,7 +8,7 @@ import {
   directionOffsetFunction,
   playerPosition,
   rotateQuarternionValue,
-} from "./atoms";
+} from "../../recoil";
 import InputKeys from "./InputKeys";
 
 function Controls({ model }) {
@@ -18,6 +18,7 @@ function Controls({ model }) {
   const animation = useRecoilValue(action);
   const directionOffset = useRecoilValue(directionOffsetFunction);
   const [modelPosition, setModelPosition] = useRecoilState(playerPosition);
+
   const setRotateQuarternionV = useSetRecoilState(rotateQuarternionValue);
 
   let walkDirection = new THREE.Vector3();
@@ -78,9 +79,9 @@ function Controls({ model }) {
         // autoRotateSpeed={0.5}
         enableDamping={true}
         enableZoom={true}
-        minDistance={5}
-        maxDistance={1}
         enablePan={false}
+        minDistance={5}
+        maxDistance={10}
         maxPolarAngle={Math.PI / 2 - 0.2}
         minPolarAngle={Math.PI / 2 - 0.6}
       />

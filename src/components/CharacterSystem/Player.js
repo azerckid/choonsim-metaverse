@@ -2,9 +2,9 @@ import React, { useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import { useRecoilState, useRecoilValue } from "recoil";
 
-import { action, playerPosition, keyPressed } from "./atoms";
+import { action, playerPosition, keyPressed } from "../../recoil";
 import Controls from "./Controls";
-import Model from "./GLTF/Michel.js";
+import Model from "../GLTF/Michel.js";
 
 function Player(props) {
   const model = useRef();
