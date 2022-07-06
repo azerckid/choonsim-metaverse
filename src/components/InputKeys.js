@@ -1,11 +1,13 @@
 import { useEffect } from "react";
-import { useRecoilState, useSetRecoilState } from "recoil";
+import { useRecoilState } from "recoil";
 import { directionOffsetFunction, keyPressed } from "./atoms.js";
 // eslint-disable-next-line
 
 function InputKeys(props) {
   const [pressedKeys, setPressedKeys] = useRecoilState(keyPressed);
-  const setDirectionOffset = useSetRecoilState(directionOffsetFunction);
+  const [preDirectionOffset, setDirectionOffset] = useRecoilState(
+    directionOffsetFunction
+  );
 
   const _pressedKey = {};
   const handleKeyDown = (event) => {
@@ -23,7 +25,6 @@ function InputKeys(props) {
     // eslint-disable-next-line
   }, []);
 
-  let prevDirectionOffset = 0;
   function directionOffsetf(pressedKeys) {
     let directionOffset = 3.14; // w
     if (pressedKeys["w"]) {
@@ -45,16 +46,11 @@ function InputKeys(props) {
     } else if (pressedKeys["d"]) {
       directionOffset = Math.PI / 2; // d
     } else {
-      directionOffset = prevDirectionOffset;
+      directionOffset = preDirectionOffset;
     }
-
-    prevDirectionOffset = directionOffset;
+    setDirectionOffset(directionOffset);
     return directionOffset;
   }
-  useEffect(() => {
-    directionOffsetf(pressedKeys);
-  }, [pressedKeys]);
-
   let directionOffsetvalue = directionOffsetf(pressedKeys);
   setDirectionOffset(directionOffsetvalue);
 

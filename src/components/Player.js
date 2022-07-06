@@ -18,9 +18,9 @@ function Player(props) {
     const start = Object.keys(pressedKeys).find(
       (key) => pressedKeys[key] === true
     );
-    const shift = Object.keys(pressedKeys).find(
-      (key) => pressedKeys[key] === true && key === "shift"
-    );
+    // const shift = Object.keys(pressedKeys).find(
+    //   (key) => pressedKeys[key] === true && key === "shift"
+    // );
 
     if (start) {
       setAnimation("Run");

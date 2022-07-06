@@ -3,13 +3,12 @@ import { Canvas } from "@react-three/fiber";
 import { Stats } from "@react-three/drei";
 import styled from "styled-components";
 import { RecoilRoot } from "recoil";
+import ReactAudioPlayer from "react-audio-player";
 
 import Plane from "./components/Plane";
 import Player from "./components/Player";
 
 import LightControl from "./components/LightControl";
-
-import ReactAudioPlayer from "react-audio-player";
 
 const Container = styled.div`
   width: 100vw;
