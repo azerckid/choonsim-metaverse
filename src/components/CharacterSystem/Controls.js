@@ -80,7 +80,8 @@ function Controls({ model }) {
         enableDamping={true}
         enableZoom={true}
         enablePan={false}
-        minDistance={5}
+        zoomSpeed={0.5}
+        minDistance={3}
         maxDistance={10}
         maxPolarAngle={Math.PI / 2 - 0.2}
         minPolarAngle={Math.PI / 2 - 0.6}

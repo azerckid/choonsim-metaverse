@@ -1,10 +1,5 @@
 import { atom } from "recoil";
 
-export const isPress = atom({
-  key: "isPress",
-  default: false,
-});
-
 export const keyPressed = atom({
   key: "keyPressed",
   default: {},

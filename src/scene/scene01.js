@@ -44,6 +44,7 @@ function scene01() {
           controls={true}
           volume={0.05}
         ></ReactAudioPlayer>
+        <h1> | w | a | s | d |</h1>
       </MusicBox>
       <Canvas shadows>
         <RecoilRoot>
@@ -54,6 +55,7 @@ function scene01() {
           </Suspense>
           <Stats />
         </RecoilRoot>
+        <axesHelper scale={3} />
       </Canvas>
     </Container>
   );
