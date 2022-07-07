@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import { Canvas } from "@react-three/fiber";
 import { Stats } from "@react-three/drei";
+import { Physics } from "@react-three/cannon";
 import styled from "styled-components";
 import { RecoilRoot } from "recoil";
 import ReactAudioPlayer from "react-audio-player";
@@ -8,6 +9,7 @@ import ReactAudioPlayer from "react-audio-player";
 import Plane from "../components/Envirionment/Plane";
 import Player from "../components/CharacterSystem/Player";
 import LightControl from "../components/Envirionment/LightControl";
+import Cube from "../components/Envirionment/Cube";
 
 const Container = styled.div`
   width: 100vw;
@@ -50,8 +52,16 @@ function scene01() {
         <RecoilRoot>
           <LightControl />
           <Suspense fallback={null}>
-            <Player></Player>
-            <Plane></Plane>
+            <Physics>
+              <Cube position={[0.5, 10, 0]} />
+              <Cube position={[0.5, 12, 0]} />
+              <Cube position={[0.5, 14, 0]} />
+              <Cube position={[0.5, 16, 0]} />
+              <Cube position={[0.5, 18, 0]} />
+              <Cube position={[0.5, 20, 0]} />
+              <Player></Player>
+              <Plane rotation={[-Math.PI / 2, 0, 0]}></Plane>
+            </Physics>
           </Suspense>
           <Stats />
         </RecoilRoot>

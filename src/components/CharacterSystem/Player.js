@@ -2,12 +2,16 @@ import React, { useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import { useRecoilState, useRecoilValue } from "recoil";
 
+import { useBox } from "@react-three/cannon";
 import { action, playerPosition, keyPressed } from "../../recoil";
 import Controls from "./Controls";
 import Model from "../GLTF/Michel.js";
 
 function Player(props) {
   const model = useRef();
+  const [refcannon] = useBox(() => ({
+    mass: 1,
+  }));
 
   const pressedKeys = useRecoilValue(keyPressed);
   const playPosition = useRecoilValue(playerPosition);
@@ -38,7 +42,7 @@ function Player(props) {
       <Controls model={model}></Controls>
       <group ref={model}>
         <directionalLight intensity={0.9} />
-        <Model action={animation}></Model>
+        <Model action={animation} ref={refcannon}></Model>
       </group>
     </>
   );
