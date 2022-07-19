@@ -2,13 +2,8 @@ import * as THREE from "three";
 import { useFrame, useThree } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
 import React, { useRef } from "react";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import {
-  action,
-  directionOffsetFunction,
-  playerPosition,
-  rotateQuarternionValue,
-} from "../../recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { action, directionOffsetFunction, playerPosition } from "../../recoil";
 import InputKeys from "./InputKeys";
 
 function Controls({ model }) {
@@ -18,8 +13,6 @@ function Controls({ model }) {
   const animation = useRecoilValue(action);
   const directionOffset = useRecoilValue(directionOffsetFunction);
   const [modelPosition, setModelPosition] = useRecoilState(playerPosition);
-
-  const setRotateQuarternionV = useSetRecoilState(rotateQuarternionValue);
 
   let walkDirection = new THREE.Vector3();
   let rotateAngle = new THREE.Vector3(0, 1, 0);
@@ -43,8 +36,6 @@ function Controls({ model }) {
       THREE.MathUtils.degToRad(10)
     );
 
-    setRotateQuarternionV(rotateQuarternion);
-
     camera.getWorldDirection(walkDirection);
     walkDirection.y = 0;
     walkDirection.normalize();
@@ -54,19 +45,20 @@ function Controls({ model }) {
 
     const moveX = walkDirection.x * velocity;
     const moveZ = walkDirection.z * velocity;
-    setModelPosition({
-      x: modelPosition.x - moveX,
-      y: modelPosition.y,
-      z: modelPosition.z - moveZ,
-    });
+
+    setModelPosition((currentPosition) => ({
+      x: currentPosition.x - moveX,
+      y: currentPosition.y,
+      z: currentPosition.z - moveZ,
+    }));
 
     // updateCameraTarget(moveX, moveZ);
     camera.position.x -= moveX;
     camera.position.z -= moveZ;
     // update camera target
-    cameraTarget.x = modelPosition.x;
-    cameraTarget.y = modelPosition.y + 1;
-    cameraTarget.z = modelPosition.z;
+    cameraTarget.x = model.current.position.x;
+    cameraTarget.y = model.current.position.y + 1;
+    cameraTarget.z = model.current.position.z;
     orbitControlRef.current.target = cameraTarget;
 
     orbitControlRef.current.update();

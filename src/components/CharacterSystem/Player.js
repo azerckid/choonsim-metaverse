@@ -14,7 +14,7 @@ function Player(props) {
   }));
 
   const pressedKeys = useRecoilValue(keyPressed);
-  const playPosition = useRecoilValue(playerPosition);
+  const modelPosition = useRecoilValue(playerPosition);
   const [animation, setAnimation] = useRecoilState(action);
 
   useFrame(() => {
@@ -34,16 +34,20 @@ function Player(props) {
   });
 
   useFrame(() => {
-    model.current?.position.set(playPosition.x, playPosition.y, playPosition.z);
+    model.current?.position.set(
+      modelPosition.x,
+      modelPosition.y,
+      modelPosition.z
+    );
   });
 
   return (
     <>
-      <Controls model={model}></Controls>
       <group ref={model}>
         <directionalLight intensity={0.9} />
         <Model action={animation} ref={refcannon}></Model>
       </group>
+      <Controls model={model}></Controls>
     </>
   );
 }
