@@ -30,7 +30,7 @@ const Modal = styled.div`
 `;
 
 function Cube(props) {
-  const [clicked, setClicked] = useState(false);
+  // const [clicked, setClicked] = useState(false);
   const [hovered, setHovered] = useState(false);
   const [open, setOpen] = useState(false);
   const [ref] = useBox(() => ({
@@ -44,12 +44,12 @@ function Cube(props) {
         ref={ref}
         castShadow
         onClick={() => {
-          setClicked(!clicked);
+          // setClicked(!clicked);
           setOpen(!open);
         }}
         onPointerOver={() => setHovered(!hovered)}
         onPointerOut={() => setHovered(!hovered)}
-        scale={!clicked ? [1, 1, 1] : [1.5, 1.5, 1.5]}
+        // scale={!clicked ? [1, 1, 1] : [1.5, 1.5, 1.5]}
       >
         <boxGeometry attach="geometry" args={[1, 1, 1]} />
         <meshStandardMaterial

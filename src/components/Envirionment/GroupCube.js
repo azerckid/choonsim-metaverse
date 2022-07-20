@@ -6,7 +6,7 @@ function GroupCube(props) {
     <group>
       <Cube position={[0.5, 10, 2.5]} rotation={[10, 20, -30]} color={"teal"} />
       <Cube
-        position={[2.5, 12, -0.5]}
+        position={[5.5, 12, -2.5]}
         rotation={[30, -10, 20]}
         color={"teal"}
       />
@@ -15,7 +15,7 @@ function GroupCube(props) {
         rotation={[-30, 20, 10]}
         color={"teal"}
       />
-      <Cube position={[1.5, 16, 1.5]} rotation={[20, -10, 30]} color={"teal"} />
+      <Cube position={[4.5, 16, 1.5]} rotation={[20, -10, 30]} color={"teal"} />
       <Cube
         position={[0.5, 18, -0.5]}
         rotation={[10, 30, -20]}
