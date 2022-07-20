@@ -9,7 +9,7 @@ import ReactAudioPlayer from "react-audio-player";
 import Plane from "../components/Envirionment/Plane";
 import Player from "../components/CharacterSystem/Player";
 import LightControl from "../components/Envirionment/LightControl";
-import Cube from "../components/Envirionment/Cube";
+import GroupCube from "../components/Envirionment/GroupCube";
 
 const Container = styled.div`
   width: 100vw;
@@ -44,6 +44,7 @@ function scene01() {
           src="g_i_dle_tomboy.ogg"
           autoPlay={true}
           controls={true}
+          repeat={true}
           volume={0.05}
         ></ReactAudioPlayer>
         <h1> | w | a | s | d |</h1>
@@ -53,12 +54,7 @@ function scene01() {
           <LightControl />
           <Suspense fallback={null}>
             <Physics>
-              <Cube position={[0.5, 10, 1.5]} color={"teal"} />
-              <Cube position={[1.5, 12, -0.5]} color={"teal"} />
-              <Cube position={[0.5, 14, -2.5]} color={"teal"} />
-              <Cube position={[1.5, 16, 0.5]} color={"teal"} />
-              <Cube position={[0.5, 18, -0.5]} color={"teal"} />
-              <Cube position={[1.5, 20, 0]} color={"teal"} />
+              <GroupCube />
               <Player></Player>
               <Plane rotation={[-Math.PI / 2, 0, 0]}></Plane>
             </Physics>
