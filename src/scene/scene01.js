@@ -53,12 +53,12 @@ function scene01() {
           <LightControl />
           <Suspense fallback={null}>
             <Physics>
-              <Cube position={[0.5, 10, 0]} />
-              <Cube position={[0.5, 12, 0]} />
-              <Cube position={[0.5, 14, 0]} />
-              <Cube position={[0.5, 16, 0]} />
-              <Cube position={[0.5, 18, 0]} />
-              <Cube position={[0.5, 20, 0]} />
+              <Cube position={[0.5, 10, 1.5]} color={"teal"} />
+              <Cube position={[1.5, 12, -0.5]} color={"teal"} />
+              <Cube position={[0.5, 14, -2.5]} color={"teal"} />
+              <Cube position={[1.5, 16, 0.5]} color={"teal"} />
+              <Cube position={[0.5, 18, -0.5]} color={"teal"} />
+              <Cube position={[1.5, 20, 0]} color={"teal"} />
               <Player></Player>
               <Plane rotation={[-Math.PI / 2, 0, 0]}></Plane>
             </Physics>
