@@ -19,7 +19,13 @@ const Modal = styled.div`
   z-index: 100;
   display: ${(props) => (props.open ? "block" : "none")};
   div {
-    margin-bottom: 10px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    h1 {
+      margin-bottom: 20px;
+    }
   }
 `;
 
@@ -52,7 +58,10 @@ function Cube(props) {
         />
         <Html center>
           <Modal open={open}>
-            <div>HELLO WORLD</div>
+            <div>
+              <h1>HELLO WORLD</h1>
+              <button onClick={() => setOpen(false)}>close</button>
+            </div>
             <p>welcome to metavers space</p>
           </Modal>
         </Html>
