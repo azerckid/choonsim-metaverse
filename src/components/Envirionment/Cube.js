@@ -4,7 +4,7 @@ import { Html } from "@react-three/drei";
 import { useBox } from "@react-three/cannon";
 
 const Modal = styled.div`
-  position: relative;
+  position: absolute;
   top: -400px;
   left: 0;
   width: 400px;
@@ -56,16 +56,16 @@ function Cube(props) {
           attach="material"
           color={!hovered ? props.color : "red"}
         />
+        <Html center>
+          <Modal open={open}>
+            <div>
+              <h1>HELLO WORLD</h1>
+              <button onClick={() => setOpen(false)}>close</button>
+            </div>
+            <p>welcome to metavers space</p>
+          </Modal>
+        </Html>
       </mesh>
-      <Html center>
-        <Modal open={open}>
-          <div>
-            <h1>HELLO WORLD</h1>
-            <button onClick={() => setOpen(false)}>close</button>
-          </div>
-          <p>welcome to metavers space</p>
-        </Modal>
-      </Html>
     </>
   );
 }

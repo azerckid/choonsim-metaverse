@@ -2,14 +2,16 @@ import { Suspense } from "react";
 import { Canvas } from "@react-three/fiber";
 import { Stats } from "@react-three/drei";
 import { Physics } from "@react-three/cannon";
+import ReactAudioPlayer from "react-audio-player";
+
 import styled from "styled-components";
 import { RecoilRoot } from "recoil";
-import ReactAudioPlayer from "react-audio-player";
 
 import Plane from "../components/Envirionment/Plane";
 import Player from "../components/CharacterSystem/Player";
 import LightControl from "../components/Envirionment/LightControl";
 import GroupCube from "../components/Envirionment/GroupCube";
+import MoviePlane from "../components/Envirionment/MoviePlane";
 
 const Container = styled.div`
   width: 100vw;
@@ -20,7 +22,6 @@ const Container = styled.div`
   justify-content: center;
   background-color: #000;
 `;
-
 const MusicBox = styled.div`
   width: 300px;
   height: 100px;
@@ -28,6 +29,7 @@ const MusicBox = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  z-index: 100;
   h1 {
     margin: 10px;
     color: #fff;
@@ -58,6 +60,8 @@ function scene01() {
               <Player></Player>
               <Plane rotation={[-Math.PI / 2, 0, 0]}></Plane>
             </Physics>
+            <MoviePlane />
+            <Stats />
           </Suspense>
           <Stats />
         </RecoilRoot>
