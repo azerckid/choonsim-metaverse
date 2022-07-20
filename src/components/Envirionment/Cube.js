@@ -4,8 +4,8 @@ import { Html } from "@react-three/drei";
 import { useBox } from "@react-three/cannon";
 
 const Modal = styled.div`
-  position: absolute;
-  top: 0;
+  position: relative;
+  top: -400px;
   left: 0;
   width: 400px;
   height: 400px;
@@ -30,7 +30,7 @@ const Modal = styled.div`
 `;
 
 function Cube(props) {
-  // const [clicked, setClicked] = useState(false);
+  const [clicked, setClicked] = useState(false);
   const [hovered, setHovered] = useState(false);
   const [open, setOpen] = useState(false);
   const [ref] = useBox(() => ({
@@ -44,28 +44,28 @@ function Cube(props) {
         ref={ref}
         castShadow
         onClick={() => {
-          // setClicked(!clicked);
+          setClicked(!clicked);
           setOpen(!open);
         }}
         onPointerOver={() => setHovered(!hovered)}
         onPointerOut={() => setHovered(!hovered)}
-        // scale={!clicked ? [1, 1, 1] : [1.5, 1.5, 1.5]}
+        scale={!clicked ? [1, 1, 1] : [1.5, 1.5, 1.5]}
       >
         <boxGeometry attach="geometry" args={[1, 1, 1]} />
         <meshStandardMaterial
           attach="material"
           color={!hovered ? props.color : "red"}
         />
-        <Html center>
-          <Modal open={open}>
-            <div>
-              <h1>HELLO WORLD</h1>
-              <button onClick={() => setOpen(false)}>close</button>
-            </div>
-            <p>welcome to metavers space</p>
-          </Modal>
-        </Html>
       </mesh>
+      <Html center>
+        <Modal open={open}>
+          <div>
+            <h1>HELLO WORLD</h1>
+            <button onClick={() => setOpen(false)}>close</button>
+          </div>
+          <p>welcome to metavers space</p>
+        </Modal>
+      </Html>
     </>
   );
 }
