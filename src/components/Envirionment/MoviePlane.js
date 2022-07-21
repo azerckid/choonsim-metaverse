@@ -7,12 +7,13 @@ function MoviePlane(props) {
   const size = useAspect(1280, 720);
   const [video] = useState(() =>
     Object.assign(document.createElement("video"), {
-      src: "/Mountains.mp4",
+      src: "/tomboy.mp4",
       crossOrigin: "Anonymous",
       loop: true,
       muted: true,
     })
   );
+
   useEffect(() => void video.play(), [video]);
   return (
     <mesh scale={size} {...props} position={[0, 5, -20]}>
