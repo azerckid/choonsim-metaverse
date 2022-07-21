@@ -16,7 +16,7 @@ function MoviePlane(props) {
 
   useEffect(() => void video.play(), [video]);
   return (
-    <mesh scale={size} {...props} position={[0, 5, -20]}>
+    <mesh scale={size} {...props}>
       <planeBufferGeometry args={[1.5, 1.5]} />
       <meshBasicMaterial toneMapped={false}>
         <videoTexture

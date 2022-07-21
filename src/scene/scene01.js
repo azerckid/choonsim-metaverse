@@ -42,11 +42,11 @@ function scene01() {
       <MusicBox>
         <h1>Hello, world! "TOM BODY" I_DLE</h1>
         <ReactAudioPlayer
-          preload="auto"
+          // preload="auto"
           src="g_i_dle_tomboy.ogg"
           autoPlay={true}
-          controls={true}
-          repeat={true}
+          controls
+          repeat
           volume={0.05}
         ></ReactAudioPlayer>
         <h1> | w | a | s | d |</h1>
@@ -60,7 +60,9 @@ function scene01() {
               <Player></Player>
               <Plane rotation={[-Math.PI / 2, 0, 0]}></Plane>
             </Physics>
-            <MoviePlane />
+            {/* <MoviePlane position={[15, 7, -10]} rotation={[0, 5, 0]} /> */}
+            <MoviePlane position={[0, 7, -20]} />
+            {/* <MoviePlane position={[-15, 7, -10]} rotation={[0, -5, 0]} /> */}
             <Stats />
           </Suspense>
           <Stats />
