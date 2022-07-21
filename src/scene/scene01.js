@@ -12,6 +12,7 @@ import Player from "../components/CharacterSystem/Player";
 import LightControl from "../components/Envirionment/LightControl";
 import GroupCube from "../components/Envirionment/GroupCube";
 import MoviePlane from "../components/Envirionment/MoviePlane";
+import { Loader } from "../components/Loader/Loader";
 
 const Container = styled.div`
   width: 100vw;
@@ -51,6 +52,7 @@ function scene01() {
         ></ReactAudioPlayer>
         <h1> | w | a | s | d |</h1>
       </MusicBox>
+      <Loader />
       <Canvas shadows>
         <RecoilRoot>
           <LightControl />
