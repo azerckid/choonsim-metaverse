@@ -43,7 +43,7 @@ function scene01() {
       <MusicBox>
         <h1>Hello, world! "TOM BODY" I_DLE</h1>
         <ReactAudioPlayer
-          // preload="auto"
+          preload="auto"
           src="g_i_dle_tomboy.ogg"
           autoPlay={true}
           controls

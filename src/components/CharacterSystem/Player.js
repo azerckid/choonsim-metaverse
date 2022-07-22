@@ -10,9 +10,9 @@ import Controls from "./Controls";
 import Model from "../GLTF/Michel.js";
 
 const NameTag = styled.div`
-  position: relative;
-  top: -280px;
-  left: -50px;
+  position: absolute;
+  top: -200px;
+  left: 0px;
   padding-top: 10px;
   transform: translate3d(50%, 0, 0);
   text-align: left;
