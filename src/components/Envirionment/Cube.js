@@ -63,6 +63,7 @@ function Cube(props) {
               <button onClick={() => setOpen(false)}>close</button>
             </div>
             <p>welcome to metavers space</p>
+            <p>azerckid@gmail.com</p>
           </Modal>
         </Html>
       </mesh>

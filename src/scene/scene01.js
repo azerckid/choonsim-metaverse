@@ -6,7 +6,6 @@ import ReactAudioPlayer from "react-audio-player";
 
 import styled from "styled-components";
 import { RecoilRoot } from "recoil";
-import io from "socket.io-client";
 
 import Plane from "../components/Envirionment/Plane";
 import Player from "../components/CharacterSystem/Player";
@@ -38,10 +37,7 @@ const MusicBox = styled.div`
   }
 `;
 
-// const socket = io("https://mogame-server-01.herokuapp.com/");
-const socket = io("http://localhost:5000");
-
-function scene01() {
+function scene01({ socket }) {
   socket.on("connect", () => {
     console.log("connected");
   });
