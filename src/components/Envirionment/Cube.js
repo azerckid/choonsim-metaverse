@@ -11,14 +11,15 @@ const Modal = styled.div`
   height: 400px;
   display: flex;
   flex-direction: column;
+  justify-content: space-around;
   align-items: center;
   padding: 20px;
   border-radius: 10px;
   background-color: #fff;
   color: #000;
-  z-index: 100;
+  z-index: 1000;
   display: ${(props) => (props.open ? "block" : "none")};
-  div {
+  div:nth-child(1) {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -26,6 +27,16 @@ const Modal = styled.div`
     h1 {
       margin-bottom: 20px;
     }
+  }
+  div:nth-child(2) {
+    height: 340px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    border-radius: 10px;
+    background-color: aquamarine;
   }
 `;
 
@@ -62,8 +73,11 @@ function Cube(props) {
               <h1>HELLO WORLD</h1>
               <button onClick={() => setOpen(false)}>close</button>
             </div>
-            <p>welcome to metavers space</p>
-            <p>azerckid@gmail.com</p>
+            <div>
+              <div>welcome to meta music album</div>
+              <p>This is a special space for everyone who love a artist.</p>
+              <div>azerckid@gmail.com</div>
+            </div>
           </Modal>
         </Html>
       </mesh>
