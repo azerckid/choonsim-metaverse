@@ -13,6 +13,8 @@ import { useGameStore } from "@/store/useGameStore";
 import { Button } from "@/components/ui/button";
 import { RocketIcon, PlayIcon, BoxIcon, VideoIcon } from "lucide-react";
 import { LightingControlPanel } from "@/components/ui/LightingControlPanel";
+import { ChatSystem } from "@/components/ui/ChatSystem";
+import { Loader } from "@/components/ui/Loader";
 
 export default function MetaverseWorld() {
     const isStarted = useGameStore((state) => state.isStarted);
@@ -20,6 +22,7 @@ export default function MetaverseWorld() {
 
     return (
         <div className="w-full h-screen bg-black overflow-hidden relative">
+            <Loader />
             {/* 3D World */}
             <Canvas shadows camera={{ position: [0, 5, 10], fov: 50 }}>
                 <Suspense fallback={null}>
@@ -116,6 +119,7 @@ export default function MetaverseWorld() {
             )}
 
             {isStarted && <LightingControlPanel />}
+            {isStarted && <ChatSystem />}
 
             {isStarted && (
                 <div className="absolute bottom-6 right-6 z-10 pointer-events-none animate-in fade-in duration-1000">

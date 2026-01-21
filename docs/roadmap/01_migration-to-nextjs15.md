@@ -49,9 +49,10 @@
 - `Michel` 캐릭터 모델 및 애니메이션 연동 완료
 - `Controls` 와 카메라 동기화 최적화 완료
 
-### Phase 5: 프리미엄 UI 및 최종 폴리싱 (Premium UI) - 🔄 진행 예정
-- `shadcn/ui` 기반 채팅 시스템 이관 예정
-- 에셋 로딩용 Loader 디자인 개선 예정
+### Phase 5: 프리미엄 UI 및 최종 폴리싱 (Premium UI) - ✅ 완료
+- `shadcn/ui` 기반 채팅 시스템(`ChatSystem.tsx`) 구현 및 Socket.io 연동
+- 에셋 로딩용 Loader(`Loader.tsx`) 디자인 개선 및 `useProgress` 연동
+- 실시간 조명 제어 패널(`LightingControlPanel`) 추가
 
 ## 5. 기대 효과 (Expected Outcomes)
 - **로딩 성능**: Next.js의 스트리밍 및 최적화된 에셋 서빙으로 초기 로딩 속도 향상
