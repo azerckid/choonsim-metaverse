@@ -2,21 +2,21 @@
 
 import React, { useEffect, useState } from "react";
 import * as THREE from "three";
-import { useAspect } from "@react-three/drei";
 import { ThreeElements } from "@react-three/fiber";
 import { useGameStore } from "@/store/useGameStore";
 
+// 단순하고 견고한 비디오 월 컴포넌트
 export function MoviePlane(props: ThreeElements["mesh"]) {
-    const size = useAspect(1280, 720);
     const isStarted = useGameStore((state) => state.isStarted);
 
+    // 비디오 엘리먼트 생성 (한 번만)
     const [video] = useState(() => {
         if (typeof window === "undefined") return null;
         const v = document.createElement("video");
         v.src = "/tomboy.mp4";
         v.crossOrigin = "anonymous";
         v.loop = true;
-        v.muted = true; // 자동 재생을 위해 반드시 muted 설정
+        v.muted = true;
         v.playsInline = true;
         return v;
     });
@@ -24,20 +24,16 @@ export function MoviePlane(props: ThreeElements["mesh"]) {
     useEffect(() => {
         if (!video || !isStarted) return;
 
-        // 사용자가 '입장' 버튼을 누른 후 재생 시도
         const playVideo = async () => {
             try {
-                video.muted = false; // 입장이 확인되었으므로 음소거 해제
-                video.volume = 0.3;  // 배경음으로 적절한 볼륨 설정
+                video.muted = false;
+                video.volume = 0.3;
                 await video.play();
-                console.log("Video started playing with audio");
             } catch (err) {
-                console.warn("Audio play failed, playing muted as fallback:", err);
                 video.muted = true;
                 await video.play();
             }
         };
-
         playVideo();
 
         return () => {
@@ -48,9 +44,10 @@ export function MoviePlane(props: ThreeElements["mesh"]) {
     if (!video) return null;
 
     return (
-        <mesh scale={[size[0] * 1.5, size[1] * 1.5, 1]} {...props}>
+        // 16:9 비율 고정 (32 x 18 크기)
+        <mesh {...props} scale={[32, 18, 1]}>
             <planeGeometry args={[1, 1]} />
-            <meshBasicMaterial toneMapped={false}>
+            <meshBasicMaterial toneMapped={false} side={THREE.DoubleSide}>
                 <videoTexture
                     attach="map"
                     args={[video]}

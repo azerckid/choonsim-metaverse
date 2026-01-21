@@ -11,28 +11,27 @@ interface ControlsProps {
 }
 
 export function Controls({ model }: ControlsProps) {
-    const orbitControlRef = useRef<any>(null);
+    const orbitRef = useRef<any>(null);
     const { camera } = useThree();
 
     const action = useGameStore((state) => state.action);
     const directionOffset = useGameStore((state) => state.directionOffset);
     const playerPosition = useGameStore((state) => state.playerPosition);
-    const setPlayerPosition = useGameStore((state) => state.setPlayerPosition);
 
-    // Reusable vectors/quaternions to avoid GC
+    // 내부 연산용 벡터들 (메모리 최적화)
     const walkDirection = useRef(new THREE.Vector3()).current;
     const rotateAngle = useRef(new THREE.Vector3(0, 1, 0)).current;
     const rotateQuarternion = useRef(new THREE.Quaternion()).current;
-    const cameraTarget = useRef(new THREE.Vector3()).current;
-    const walkVelocity = 0.05;
 
-    useFrame((state, delta) => {
-        if (!model.current || !orbitControlRef.current) return;
+    const walkVelocity = 0.1; // 이동 속도
 
-        // Calculate rotation towards movement direction
+    useFrame(() => {
+        if (!model.current || !orbitRef.current) return;
+
+        // 1. 캐릭터 회전
         const angleYCameraDirection = Math.atan2(
-            camera.position.x - playerPosition.x,
-            camera.position.z - playerPosition.z
+            camera.position.x - model.current.position.x,
+            camera.position.z - model.current.position.z
         );
 
         rotateQuarternion.setFromAxisAngle(
@@ -42,54 +41,50 @@ export function Controls({ model }: ControlsProps) {
 
         model.current.quaternion.rotateTowards(
             rotateQuarternion,
-            THREE.MathUtils.degToRad(10)
+            0.2
         );
 
-        // Calculate movement velocity
+        // 2. 이동 방향 계산
         camera.getWorldDirection(walkDirection);
         walkDirection.y = 0;
         walkDirection.normalize();
         walkDirection.applyAxisAngle(rotateAngle, directionOffset);
 
+        // 3. 위치 업데이트
         const velocity = action === "Run" ? walkVelocity : 0;
         const moveX = walkDirection.x * velocity;
         const moveZ = walkDirection.z * velocity;
 
-        // Update position in store
-        const newPos = {
-            x: playerPosition.x - moveX,
-            y: playerPosition.y,
-            z: playerPosition.z - moveZ,
-        };
+        // 현재 위치에서 이동량 빼기 (기존 로직 유지 - 카메라 기준이라 뺌)
+        // 캐릭터가 앞으로 갈 때 좌표가 감소하는 방향이라면 -= 가 맞음
+        const nextX = playerPosition.x - moveX;
+        const nextZ = playerPosition.z - moveZ;
 
-        // Direct store update for performance (avoiding React re-render of complex components)
-        useGameStore.setState({ playerPosition: newPos });
+        // Zustand 업데이트
+        useGameStore.setState({
+            playerPosition: { x: nextX, y: playerPosition.y, z: nextZ }
+        });
 
-        // Sync camera with model
+        // 모델 위치 강제 업데이트
+        model.current.position.set(nextX, playerPosition.y, nextZ);
+
+        // 4. 카메라 이동 (캐릭터를 따라감)
         camera.position.x -= moveX;
         camera.position.z -= moveZ;
 
-        cameraTarget.set(
-            model.current.position.x,
-            model.current.position.y + 1,
-            model.current.position.z
-        );
-
-        orbitControlRef.current.target.copy(cameraTarget);
-        orbitControlRef.current.update();
+        // OrbitControls 타겟 업데이트 (캐릭터 머리 위)
+        orbitRef.current.target.set(nextX, playerPosition.y + 1.5, nextZ);
+        orbitRef.current.update();
     });
 
     return (
         <OrbitControls
-            ref={orbitControlRef}
-            enableDamping={true}
+            ref={orbitRef}
             enableZoom={true}
             enablePan={false}
-            zoomSpeed={0.5}
-            minDistance={3}
-            maxDistance={10}
-            maxPolarAngle={Math.PI / 2 - 0.2}
-            minPolarAngle={Math.PI / 2 - 0.6}
+            minDistance={5}
+            maxDistance={15}
+            maxPolarAngle={Math.PI / 2 - 0.1}
         />
     );
 }
