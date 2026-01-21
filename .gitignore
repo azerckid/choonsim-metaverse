@@ -10,6 +10,16 @@
 !.yarn/releases
 !.yarn/versions
 
+# Local Backups
+.backup_legacy/
+
+# IDE Settings
+.vscode/
+.idea/
+
+# OS Files
+Thumbs.db
+
 # testing
 /coverage
 
