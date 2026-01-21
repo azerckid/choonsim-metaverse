@@ -54,11 +54,15 @@
 - 에셋 로딩용 Loader(`Loader.tsx`) 디자인 개선 및 `useProgress` 연동
 - 실시간 조명 제어 패널(`LightingControlPanel`) 추가
 
-### Phase 6: 멀티플레이어 동기화 (Multiplayer Sync) - 🔄 진행 예정
-- **Socket.io** 위치 데이터 송수신 로직 구현 (`playerMove`, `playersList`)
-- 타 유저 렌더링용 `OtherPlayer` 컴포넌트 구현
-- Zustand Store에 접속자 목록 상태 관리 로직 추가
-- 다중 접속자 애니메이션 및 위치 보간(Interpolation) 적용
+### Phase 6: 멀티플레이어 동기화 (Multiplayer Sync) - 🔄 진행 중
+- **Goal**: Socket.io를 활용한 실시간 다중 사용자 인터랙션 구현
+- **Steps**:
+  - [x] Node.js + Socket.io 게임 서버 구축 (별도 프로젝트 분리)
+  - [x] Client-Server 소켓 연결 설정 (Port 5050)
+  - [x] Zustand를 통한 접속자 상태(User List) 관리
+  - [x] 타 유저 렌더링용 `OtherPlayer` 컴포넌트 구현
+  - [x] 실시간 위치/회전 동기화 (Lerp Interpolation 적용)
+  - [ ] 채팅 시스템 Socket.io 연동 (기존 UI w/ Server)
 
 ## 5. 기대 효과 (Expected Outcomes)
 - **로딩 성능**: Next.js의 스트리밍 및 최적화된 에셋 서빙으로 초기 로딩 속도 향상
