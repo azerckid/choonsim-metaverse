@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { socket } from "@/lib/socket";
 import { useGameStore } from "@/store/useGameStore";
 
@@ -27,9 +27,16 @@ export function useSocket() {
         // 서버 사이드에서 정의된 타입과 맞추기 위해 any 사용 또는 공통 타입 패키지 필요
         const onInit = (data: { id: string; users: any }) => {
             console.log("Socket Initialized - Received Users:", data);
+
             // 나 자신을 제외한 유저 목록 필터링
+            // 서버에서 보내준 내 ID(data.id)를 기준으로 필터링해야 정확함
+            const myServerId = data.id || socket.id;
+
             const others = { ...data.users };
-            if (data.id) delete others[data.id]; // socket.id가 아직 설정 안되었을 경우 대비
+            if (myServerId && others[myServerId]) {
+                delete others[myServerId];
+            }
+
             setOtherPlayers(others);
         };
 
@@ -74,13 +81,18 @@ export function useSocket() {
         };
     }, [isStarted, setOtherPlayers, updateOtherPlayerPosition, removeOtherPlayer]);
 
-    // 2. 내 위치 전송 (Throttling 고려 가능)
+    // 2. 내 위치 전송 (Throttling 적용: 50ms)
+    const lastEmitTime = useRef<number>(0);
+
     useEffect(() => {
         if (!isStarted || !socket.connected) return;
 
-        // 너무 잦은 전송을 막기 위해 0.05초(20fps) 단위로 끊는 것이 좋으나,
-        // 일단은 위치가 변경될 때마다 전송 (React 상태 업데이트 주기에 의존)
-        socket.emit("playerMove", { position: playerPosition });
+        const now = Date.now();
+        // 50ms (초당 20회) 제한으로 네트워크 부하 감소
+        if (now - lastEmitTime.current > 50) {
+            socket.emit("playerMove", { position: playerPosition });
+            lastEmitTime.current = now;
+        }
 
     }, [playerPosition, isStarted]);
 }

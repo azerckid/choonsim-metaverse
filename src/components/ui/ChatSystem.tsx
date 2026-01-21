@@ -25,8 +25,7 @@ export function ChatSystem() {
     const scrollRef = useRef<HTMLDivElement>(null);
     const [isOpen, setIsOpen] = useState(false);
 
-    // 임시 사용자 ID (나중에 실제 인증/닉네임 시스템으로 교체 필요)
-    const [myId] = useState(() => `User-${Math.floor(Math.random() * 1000)}`);
+    // 임시 사용자 ID 제거 (socket.id 사용)
 
     useEffect(() => {
         if (!isStarted) return;
@@ -37,13 +36,13 @@ export function ChatSystem() {
         }
 
         // 메시지 수신 이벤트 핸들러
-        const handleMessage = (data: { sender: string; message: string; timestamp?: number }) => {
+        const handleMessage = (data: { id: string; sender: string; message: string; timestamp?: number }) => {
             const newMessage: ChatMessage = {
                 id: Math.random().toString(36).substr(2, 9),
-                sender: data.sender,
+                sender: data.sender, // 닉네임
                 message: data.message,
                 timestamp: data.timestamp || Date.now(),
-                isMe: data.sender === myId,
+                isMe: data.id === socket.id, // socket.id로 내 메시지 확인
             };
 
             setMessages((prev) => [...prev, newMessage]);
@@ -59,7 +58,7 @@ export function ChatSystem() {
         return () => {
             socket.off("chat", handleMessage);
         };
-    }, [isStarted, myId, isOpen]);
+    }, [isStarted, isOpen]);
 
     // 자동 스크롤
     useEffect(() => {
@@ -74,35 +73,8 @@ export function ChatSystem() {
     const handleSend = () => {
         if (!inputValue.trim()) return;
 
-        const payload = {
-            sender: myId,
-            message: inputValue.trim(),
-            timestamp: Date.now(),
-        };
-
-        // 서버로 전송
-        socket.emit("chat", payload);
-
-        // 내 메시지는 즉시 추가 (낙관적 UI) 또는 서버 ack 대기
-        // 여기서는 socket.on('chat')에서 모두 처리한다고 가정하거나,
-        // 서버가 브로드캐스트할 때 나에게도 보내는지 확인 필요.
-        // 보통은 나에게도 보내거나, 내가 직접 추가함. 
-        // 중복 방지를 위해 서버가 sender에게도 보내주는지 확인해야 함.
-        // 일단 서버 구현을 모르니, 일반적인 패턴으로 '나'는 직접 추가하고 서버 에코는 필터링하거나,
-        // socket.io 기본 브로드캐스트(sender 제외)라면 직접 추가해야 함.
-        // 안전하게: 서버가 나를 포함한 모두에게 emit 한다고 가정하고 여기선 emit만 함.
-        // 만약 반응이 느리다면 낙관적 업데이트 추가.
-
-        // 테스트용: 로컬에서 바로 추가 (서버 없이 테스트 가능하도록)
-        /*
-        setMessages((prev) => [...prev, {
-          id: Math.random().toString(),
-          sender: myId,
-          message: inputValue,
-          timestamp: Date.now(),
-          isMe: true
-        }]);
-        */
+        // 서버로 메시지 전송 (id, sender, timestamp는 서버가 부여함)
+        socket.emit("chat", { message: inputValue.trim() });
 
         setInputValue("");
     };

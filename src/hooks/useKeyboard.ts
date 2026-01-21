@@ -6,6 +6,10 @@ export const useKeyboard = () => {
 
     useEffect(() => {
         const handleKeyDown = (event: KeyboardEvent) => {
+            // 입력 필드 포커스 시 무시
+            const target = document.activeElement as HTMLElement;
+            if (target.tagName === "INPUT" || target.tagName === "TEXTAREA") return;
+
             const key = event.key.toLowerCase();
             useGameStore.setState((state) => ({
                 keyPressed: { ...state.keyPressed, [key]: true }
@@ -13,6 +17,11 @@ export const useKeyboard = () => {
         };
 
         const handleKeyUp = (event: KeyboardEvent) => {
+            // 입력 필드 포커스 시에는 키 떼기 이벤트도 무시할 수 있으나,
+            // 키가 '눌린 채로' 채팅을 시작했을 때 캐릭터가 계속 가는 것을 방지하려면
+            // keyUp은 허용하거나, 채팅 시작 시 상태를 reset하는 것이 안전함.
+            // 여기서는 일단 keyUp은 허용하여 멈추게 함.
+
             const key = event.key.toLowerCase();
             useGameStore.setState((state) => ({
                 keyPressed: { ...state.keyPressed, [key]: false }
