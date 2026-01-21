@@ -34,23 +34,23 @@ Welcome! I am your AI coding agent. This file follows the [AGENTS.md](https://ag
 - Start development server: `npm run dev`
 - Build production bundle: `npm run build`
 
-## Tech Stack
+### Tech Stack
 
-### Core Framework
+### Frontend (Client)
 - **Framework**: Next.js 15.1.0 (App Router, React 19)
 - **Runtime**: Node.js 20+
 - **Language**: TypeScript ^5
+- **3D Engine**: Three.js, @react-three/fiber
+- **Styling**: Tailwind CSS v4, shadcn/ui
+- **State Management**: Zustand, Zod
+- **Infrastructure**: Vercel (Serverless)
 
-### 3D Graphics & Physics
-- **Engine**: Three.js ^0.170.0
-- **React Adapter**: @react-three/fiber ^9.0.0
-- **Utilities**: @react-three/drei ^10.0.0
-- **Physics**: @react-three/cannon ^6.6.0
-
-### Real-time & State
-- **Real-time**: Socket.io-client ^4.8.0
-- **State Management**: Zustand ^5.0.0 (Recoil 대체 추천)
-- **Validation**: Zod (TypeScript)
+### Backend (Game Server)
+- **Runtime**: Node.js (Long-running process)
+- **Framework**: Express.js
+- **Real-time Engine**: Socket.io Server
+- **Language**: TypeScript
+- **Infrastructure**: AWS EC2 / Railway (Stateful)
 
 ### Frontend & UI
 - **Styling**: Tailwind CSS ^4.0.0

@@ -54,6 +54,12 @@
 - 에셋 로딩용 Loader(`Loader.tsx`) 디자인 개선 및 `useProgress` 연동
 - 실시간 조명 제어 패널(`LightingControlPanel`) 추가
 
+### Phase 6: 멀티플레이어 동기화 (Multiplayer Sync) - 🔄 진행 예정
+- **Socket.io** 위치 데이터 송수신 로직 구현 (`playerMove`, `playersList`)
+- 타 유저 렌더링용 `OtherPlayer` 컴포넌트 구현
+- Zustand Store에 접속자 목록 상태 관리 로직 추가
+- 다중 접속자 애니메이션 및 위치 보간(Interpolation) 적용
+
 ## 5. 기대 효과 (Expected Outcomes)
 - **로딩 성능**: Next.js의 스트리밍 및 최적화된 에셋 서빙으로 초기 로딩 속도 향상
 - **런타임 성능**: Zero-runtime CSS(Tailwind)와 가벼운 상태 관리(Zustand)로 프레임 드랍 최소화
