@@ -10,14 +10,12 @@ interface OtherPlayerProps {
     id: string;
     position: { x: number; y: number; z: number };
     action?: string;
+    nickname?: string;
 }
 
-export function OtherPlayer({ id, position, action = "Idle" }: OtherPlayerProps) {
+export function OtherPlayer({ id, position, action = "Idle", nickname }: OtherPlayerProps) {
     const groupRef = useRef<THREE.Group>(null);
     const [currentAction, setCurrentAction] = useState(action);
-
-    // 이전 위치 저장용 (이동 감지 및 회전 계산)
-    const prevPosition = useRef(new THREE.Vector3(position.x, position.y, position.z));
 
     // Lerp (Linear Interpolation)를 위한 목표 위치
     const targetPosition = useRef(new THREE.Vector3(position.x, position.y, position.z));
@@ -26,14 +24,29 @@ export function OtherPlayer({ id, position, action = "Idle" }: OtherPlayerProps)
         // 목표 위치 업데이트
         targetPosition.current.set(position.x, position.y, position.z);
 
-        // 움직임 감지하여 애니메이션 설정
-        const dist = prevPosition.current.distanceTo(targetPosition.current);
-        if (dist > 0.01) {
+        if (!groupRef.current) return;
+        const currentPos = groupRef.current.position;
+        const dist = currentPos.distanceTo(targetPosition.current);
+
+        // 거리가 너무 멀면(텔레포트 등) 즉시 이동 (초기 렌더링 포함)
+        if (dist > 5) {
+            groupRef.current.position.copy(targetPosition.current);
+        }
+
+        // 애니메이션 상태 업데이트
+        if (dist > 0.1) {
             setCurrentAction("Run");
         } else {
             setCurrentAction("Idle");
         }
     }, [position.x, position.y, position.z]);
+
+    // 초기 렌더링 시 위치 강제 설정 (깜빡임/사라짐 방지)
+    useEffect(() => {
+        if (groupRef.current) {
+            groupRef.current.position.set(position.x, position.y, position.z);
+        }
+    }, []);
 
     useFrame((state, delta) => {
         if (!groupRef.current) return;
@@ -45,26 +58,26 @@ export function OtherPlayer({ id, position, action = "Idle" }: OtherPlayerProps)
 
         // 2. 이동 방향 바라보기 (LookAt)
         const currentPos = groupRef.current.position;
-        const diff = new THREE.Vector3().subVectors(targetPosition.current, currentPos);
 
-        // 이동 중일 때만 회전 업데이트
-        if (diff.lengthSq() > 0.001) {
-            const lookTarget = new THREE.Vector3().addVectors(currentPos, diff);
+        // y축 회전만 적용하기 위해 높이차 무시한 타겟 설정
+        const lookTarget = new THREE.Vector3(targetPosition.current.x, currentPos.y, targetPosition.current.z);
+        const distSq = currentPos.distanceToSquared(lookTarget);
+
+        // 이동 중일 때만 회전 업데이트 (너무 작은 움직임은 무시하여 떨림 방지)
+        if (distSq > 0.001) {
             groupRef.current.lookAt(lookTarget);
         }
-
-        prevPosition.current.copy(currentPos);
     });
 
     return (
-        <group ref={groupRef} position={[position.x, position.y, position.z]}>
+        <group ref={groupRef}>
             <Michel action={currentAction} />
 
             {/* 닉네임 / ID 표시 */}
             <Html distanceFactor={12} position={[0, 2.2, 0]} center>
                 <div className="flex flex-col items-center gap-1">
-                    <div className="px-2 py-1 bg-black/60 text-white/50 backdrop-blur-md rounded-md text-[10px] font-mono border border-white/10 shadow-lg">
-                        {id.slice(0, 5)}...
+                    <div className="px-2 py-1 bg-black/60 text-white/90 backdrop-blur-md rounded-md text-[10px] font-bold font-mono border border-white/10 shadow-lg whitespace-nowrap">
+                        {nickname || id.slice(0, 5)}
                     </div>
                 </div>
             </Html>

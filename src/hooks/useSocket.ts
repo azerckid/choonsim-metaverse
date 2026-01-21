@@ -14,45 +14,63 @@ export function useSocket() {
     useEffect(() => {
         if (!isStarted) return;
 
-        if (!socket.connected) {
-            socket.connect();
-        }
+        console.log("Attempting to connect to socket server...");
+
+        const onConnect = () => {
+            console.log("Socket Connected! ID:", socket.id);
+        };
+
+        const onConnectError = (error: any) => {
+            console.error("Socket Connection Error:", error);
+        };
 
         // 서버 사이드에서 정의된 타입과 맞추기 위해 any 사용 또는 공통 타입 패키지 필요
-        // 현재는 로컬 인터페이스에 의존
         const onInit = (data: { id: string; users: any }) => {
-            console.log("Socket Initialized:", data);
-            // 나 자신을 제외한 유저 목록 필터링 (필요 시)
+            console.log("Socket Initialized - Received Users:", data);
+            // 나 자신을 제외한 유저 목록 필터링
             const others = { ...data.users };
-            delete others[data.id];
+            if (data.id) delete others[data.id]; // socket.id가 아직 설정 안되었을 경우 대비
             setOtherPlayers(others);
         };
 
         const onPlayerJoined = (user: any) => {
-            console.log("Player Joined:", user);
-            updateOtherPlayerPosition(user.id, user.position);
+            console.log("Player Joined Event:", user);
+            // user 객체에는 id, position, nickname이 포함됨
+            updateOtherPlayerPosition(user.id, user.position, user.action, user.nickname);
         };
 
         const onPlayerMoved = (data: { id: string; position: { x: number; y: number; z: number } }) => {
+            // console.log("Player Moved:", data); // 너무 잦은 로그 방지
             updateOtherPlayerPosition(data.id, data.position);
         };
 
         const onPlayerLeft = (data: { id: string }) => {
-            console.log("Player Left:", data.id);
+            console.log("Player Left Event:", data.id);
             removeOtherPlayer(data.id);
         };
 
+        // 리스너 등록
+        socket.on("connect", onConnect);
+        socket.on("connect_error", onConnectError);
         socket.on("init", onInit);
         socket.on("playerJoined", onPlayerJoined);
         socket.on("playerMoved", onPlayerMoved);
         socket.on("playerLeft", onPlayerLeft);
 
+        // 연결 시도 (리스너 등록 후)
+        if (!socket.connected) {
+            socket.io.opts.autoConnect = true; // 수동 연결에서 자동 연결로 변경해도 됨
+            socket.connect();
+        }
+
         return () => {
+            console.log("Cleaning up socket listeners...");
+            socket.off("connect", onConnect);
+            socket.off("connect_error", onConnectError);
             socket.off("init", onInit);
             socket.off("playerJoined", onPlayerJoined);
             socket.off("playerMoved", onPlayerMoved);
             socket.off("playerLeft", onPlayerLeft);
-            // socket.disconnect(); // 컴포넌트 언마운트 시 연결을 끊을지는 기획에 따라 결정 (전역 유지가 유리)
         };
     }, [isStarted, setOtherPlayers, updateOtherPlayerPosition, removeOtherPlayer]);
 

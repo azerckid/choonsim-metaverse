@@ -10,8 +10,13 @@ import { useKeyboard } from "@/hooks/useKeyboard";
 import { Michel } from "./Michel";
 import { Controls } from "./Controls";
 
-export function Player() {
+interface PlayerProps {
+    nickname?: string;
+}
+
+export function Player({ nickname }: PlayerProps) {
     const modelRef = useRef<THREE.Group>(null);
+    // ...
 
     // Initialize keyboard controls
     useKeyboard();
@@ -52,8 +57,8 @@ export function Player() {
             <group ref={modelRef}>
                 <Michel action={action} />
                 <Html distanceFactor={10} position={[0, 2, 0]} center>
-                    <div className="px-3 py-2 bg-zinc-900/80 text-white rounded-lg text-sm font-medium backdrop-blur-sm border border-white/20 whitespace-nowrap shadow-xl">
-                        Azerckid Michel
+                    <div className="px-3 py-1 bg-teal-500/80 text-white rounded-lg text-sm font-bold backdrop-blur-sm border border-white/20 whitespace-nowrap shadow-xl">
+                        {nickname || "Guest"}
                     </div>
                 </Html>
             </group>

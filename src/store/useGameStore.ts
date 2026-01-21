@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { subscribeWithSelector } from "zustand/middleware";
 
-interface PlayerPosition {
+export interface PlayerPosition {
   x: number;
   y: number;
   z: number;
@@ -16,10 +16,11 @@ interface LightingSettings {
   environmentPreset: "city" | "warehouse" | "apartment" | "forest" | "lobby" | "night" | "park" | "studio" | "sunset" | "dawn";
 }
 
-interface OtherPlayer {
+export interface OtherPlayer {
   id: string;
   position: PlayerPosition;
   action?: string; // 다른 플레이어의 애니메이션 상태 (Run, Idle 등)
+  nickname?: string;
 }
 
 interface GameState {
@@ -49,7 +50,7 @@ interface GameState {
 
   // 멀티플레이어 액션
   setOtherPlayers: (players: Record<string, OtherPlayer>) => void;
-  updateOtherPlayerPosition: (id: string, position: PlayerPosition) => void;
+  updateOtherPlayerPosition: (id: string, position: PlayerPosition, action?: string, nickname?: string) => void;
   removeOtherPlayer: (id: string) => void;
 }
 
@@ -82,13 +83,15 @@ export const useGameStore = create<GameState>()(
     })),
 
     setOtherPlayers: (players) => set({ otherPlayers: players }),
-    updateOtherPlayerPosition: (id, position) => set((state) => ({
+    updateOtherPlayerPosition: (id, position, action = "Idle", nickname) => set((state) => ({
       otherPlayers: {
         ...state.otherPlayers,
         [id]: {
           ...state.otherPlayers[id],
           id, // ensure id exists if creating new
-          position
+          position,
+          action: action || state.otherPlayers[id]?.action,
+          nickname: nickname || state.otherPlayers[id]?.nickname
         }
       }
     })),

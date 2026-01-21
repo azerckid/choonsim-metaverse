@@ -1,6 +1,6 @@
 "use client";
 
-import React, { Suspense } from "react";
+import React, { Suspense, useState } from "react";
 import { Canvas } from "@react-three/fiber";
 import { Stats } from "@react-three/drei";
 import { Physics } from "@react-three/cannon";
@@ -9,14 +9,36 @@ import { Plane } from "./environment/Plane";
 import { GroupCube } from "./interaction/GroupCube";
 import { MoviePlane } from "./environment/MoviePlane";
 import { OtherPlayer } from "./character/OtherPlayer";
+import { OtherPlayer as OtherPlayerType } from "@/store/useGameStore"; // 타입 import 충돌 방지
+import { Player } from "./character/Player";
+import { useGameStore } from "@/store/useGameStore";
+import { Button } from "@/components/ui/button";
+import { RocketIcon, PlayIcon, BoxIcon, VideoIcon } from "lucide-react";
+import { LightingControlPanel } from "@/components/ui/LightingControlPanel";
+import { ChatSystem } from "@/components/ui/ChatSystem";
+import { Loader } from "@/components/ui/Loader";
+import { useSocket } from "@/hooks/useSocket";
+import { socket } from "@/lib/socket";
 
 export default function MetaverseWorld() {
     const isStarted = useGameStore((state) => state.isStarted);
     const setIsStarted = useGameStore((state) => state.setIsStarted);
     const otherPlayers = useGameStore((state) => state.otherPlayers); // 접속자 목록
+    const [nickname, setNickname] = useState("");
 
     // 소켓 연결 활성화
     useSocket();
+
+    const handleJoin = () => {
+        if (!nickname.trim()) return;
+
+        console.log("Joining with nickname:", nickname);
+        // 서버로 닉네임 전송 및 게임 참여 요청
+        if (!socket.connected) socket.connect();
+        socket.emit("join", { nickname: nickname.trim() });
+
+        setIsStarted(true);
+    };
 
     return (
         <div className="w-full h-screen bg-black overflow-hidden relative">
@@ -28,7 +50,7 @@ export default function MetaverseWorld() {
                         <LightControl />
                         <Plane rotation={[-Math.PI / 2, 0, 0]} />
                         <GroupCube />
-                        <Player />
+                        <Player nickname={nickname} />
                         {/* 다른 유저들 렌더링 */}
                         {Object.values(otherPlayers).map((player) => (
                             <OtherPlayer
@@ -36,6 +58,7 @@ export default function MetaverseWorld() {
                                 id={player.id}
                                 position={player.position}
                                 action={player.action}
+                                nickname={player.nickname}
                             />
                         ))}
                     </Physics>
@@ -66,14 +89,26 @@ export default function MetaverseWorld() {
                             </p>
                         </div>
 
-                        <Button
-                            size="lg"
-                            onClick={() => setIsStarted(true)}
-                            className="h-16 px-12 bg-teal-500 hover:bg-teal-400 text-zinc-950 font-black text-lg rounded-full transition-all hover:scale-105 active:scale-95 shadow-[0_0_50px_rgba(45,212,191,0.3)] gap-3"
-                        >
-                            <PlayIcon className="w-6 h-6 fill-current" />
-                            ENTER METAVERSE
-                        </Button>
+                        <div className="flex flex-col items-center gap-4 w-full max-w-xs animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-300">
+                            <input
+                                type="text"
+                                placeholder="Enter your nickname"
+                                value={nickname}
+                                onChange={(e) => setNickname(e.target.value)}
+                                onKeyDown={(e) => e.key === "Enter" && handleJoin()}
+                                className="w-full h-12 px-6 bg-zinc-900/50 border border-white/10 rounded-full text-center text-white placeholder:text-zinc-600 focus:outline-none focus:border-teal-500/50 focus:bg-zinc-900/80 transition-all"
+                                autoFocus
+                            />
+                            <Button
+                                size="lg"
+                                onClick={handleJoin}
+                                disabled={!nickname.trim()}
+                                className="w-full h-16 bg-teal-500 hover:bg-teal-400 disabled:opacity-50 disabled:cursor-not-allowed text-zinc-950 font-black text-lg rounded-full transition-all hover:scale-105 active:scale-95 shadow-[0_0_50px_rgba(45,212,191,0.3)] gap-3"
+                            >
+                                <PlayIcon className="w-6 h-6 fill-current" />
+                                ENTER METAVERSE
+                            </Button>
+                        </div>
 
                         <div className="grid grid-cols-3 gap-12 mt-4 opacity-60">
                             <div className="flex flex-col gap-2">
@@ -110,7 +145,16 @@ export default function MetaverseWorld() {
                             MOGAME METAVERSE
                         </h1>
                         <div className="h-[1px] w-full bg-white/10 my-1" />
-                        <p className="text-[10px] uppercase tracking-widest text-zinc-400">Environment: Stable v2.1</p>
+                        <div className="h-[1px] w-full bg-white/10 my-1" />
+                        <div className="flex items-center justify-between min-w-[200px]">
+                            <p className="text-[10px] uppercase tracking-widest text-zinc-400">Environment: Stable v2.1</p>
+                            <div className="flex items-center gap-2">
+                                <div className={`w-2 h-2 rounded-full ${socket.connected ? "bg-green-500 shadow-[0_0_8px_#22c55e]" : "bg-red-500 shadow-[0_0_8px_#ef4444]"}`} />
+                                <span className="text-[10px] font-bold text-zinc-300">
+                                    {Object.keys(otherPlayers).length + 1} ONLINE
+                                </span>
+                            </div>
+                        </div>
                         <div className="flex gap-4 mt-2">
                             <div className="flex flex-col">
                                 <span className="text-[8px] text-zinc-500 font-bold uppercase">Controls</span>
