@@ -32,31 +32,31 @@
 
 ## 4. 상세 로드맵 (Detailed Roadmap)
 
-### Phase 1: 기반 구축 (Foundation)
-- Next.js 15 (v15.1.0) 초기화
-- TypeScript 환경 구성
-- Tailwind CSS v4 설치 및 기존 CSS 토큰 이관
-- `.gitignore` 및 환경 변수 설정
+### Phase 1: 기반 구축 (Foundation) - ✅ 완료
+- Next.js 15 (v15.1.0) 초기화 완료
+- TypeScript 및 Tailwind CSS v4 환경 구성 완료
 
-### Phase 2: 인프라 마이그레이션 (Infrastructure)
-- **Socket.io-client** 연동: Client Component 내 싱글톤 패턴 적용
-- **Zustand** 설정: 3D 동기화에 필요한 빈번한 상태 변화 처리 최적화
-- 기존 Recoil 상태 이관 (keyPressed, playerPosition 등)
+### Phase 2: 인프라 마이그레이션 (Infrastructure) - ✅ 완료
+- **Zustand** 기반 전역 상태 관리 구축 완료
+- **Socket.io** 클라이언트 싱글톤 모듈 작성 완료
+- **useKeyboard** 커스텀 훅 마이그레이션 완료
 
-### Phase 3: 3D 환경 및 에셋 마이그레이션 (3D Assets)
-- `public/` 에셋 이동 및 최적화
-- `src/components/Envirionment` 및 `src/scene` 리팩토링
-- @react-three/fiber 9.0 및 drei 10.0 기반 코드 업데이트
+### Phase 3: 3D 환경 및 에셋 마이그레이션 (3D Assets) - ✅ 완료
+- 조명 시스템 고도화 및 어두움 현상 해결
+- 비디오 텍스처(`MoviePlane`) 및 브라우저 오디오 정책 우회 로직 구현
 
-### Phase 4: 캐릭터 시스템 및 물리 엔진 (Character & Physics)
-- `@react-three/cannon` (v6.6.0) 업데이트 및 충돌 로직 검증
-- 캐릭터 조작 시스템 (WASD) 및 카메라 컨트롤 최적화
+### Phase 4: 캐릭터 시스템 및 물리 엔진 (Character & Physics) - ✅ 완료
+- `Michel` 캐릭터 모델 및 애니메이션 연동 완료
+- `Controls` 와 카메라 동기화 최적화 완료
 
-### Phase 5: 프리미엄 UI 및 최종 폴리싱 (Premium UI)
-- `shadcn/ui` 기반 채팅 및 상태창 UI 구현
-- Framer Motion을 활용한 부드러운 전환 인터랙션 추가
+### Phase 5: 프리미엄 UI 및 최종 폴리싱 (Premium UI) - 🔄 진행 예정
+- `shadcn/ui` 기반 채팅 시스템 이관 예정
+- 에셋 로딩용 Loader 디자인 개선 예정
 
 ## 5. 기대 효과 (Expected Outcomes)
 - **로딩 성능**: Next.js의 스트리밍 및 최적화된 에셋 서빙으로 초기 로딩 속도 향상
 - **런타임 성능**: Zero-runtime CSS(Tailwind)와 가벼운 상태 관리(Zustand)로 프레임 드랍 최소화
 - **유지 보수**: TypeScript 적용으로 코드 안정성 및 협업 효율 증대
+
+
+

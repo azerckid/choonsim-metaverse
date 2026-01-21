@@ -4,31 +4,48 @@ import React, { useEffect, useState } from "react";
 import * as THREE from "three";
 import { useAspect } from "@react-three/drei";
 import { ThreeElements } from "@react-three/fiber";
+import { useGameStore } from "@/store/useGameStore";
 
 export function MoviePlane(props: ThreeElements["mesh"]) {
     const size = useAspect(1280, 720);
+    const isStarted = useGameStore((state) => state.isStarted);
+
     const [video] = useState(() => {
+        if (typeof window === "undefined") return null;
         const v = document.createElement("video");
-        if (typeof window !== "undefined") {
-            v.src = "/tomboy.mp4";
-            v.crossOrigin = "anonymous";
-            v.loop = true;
-            v.muted = true;
-        }
+        v.src = "/tomboy.mp4";
+        v.crossOrigin = "anonymous";
+        v.loop = true;
+        v.muted = true; // 자동 재생을 위해 반드시 muted 설정
+        v.playsInline = true;
         return v;
     });
 
     useEffect(() => {
-        if (video) {
-            video.play().catch((err: Error) => console.log("Video play failed:", err));
-        }
-        return () => {
-            if (video) {
-                video.pause();
-                video.src = "";
+        if (!video || !isStarted) return;
+
+        // 사용자가 '입장' 버튼을 누른 후 재생 시도
+        const playVideo = async () => {
+            try {
+                video.muted = false; // 입장이 확인되었으므로 음소거 해제
+                video.volume = 0.3;  // 배경음으로 적절한 볼륨 설정
+                await video.play();
+                console.log("Video started playing with audio");
+            } catch (err) {
+                console.warn("Audio play failed, playing muted as fallback:", err);
+                video.muted = true;
+                await video.play();
             }
         };
-    }, [video]);
+
+        playVideo();
+
+        return () => {
+            video.pause();
+        };
+    }, [video, isStarted]);
+
+    if (!video) return null;
 
     return (
         <mesh scale={[size[0] * 1.5, size[1] * 1.5, 1]} {...props}>
