@@ -8,17 +8,15 @@ import { LightControl } from "./environment/LightControl";
 import { Plane } from "./environment/Plane";
 import { GroupCube } from "./interaction/GroupCube";
 import { MoviePlane } from "./environment/MoviePlane";
-import { Player } from "./character/Player";
-import { useGameStore } from "@/store/useGameStore";
-import { Button } from "@/components/ui/button";
-import { RocketIcon, PlayIcon, BoxIcon, VideoIcon } from "lucide-react";
-import { LightingControlPanel } from "@/components/ui/LightingControlPanel";
-import { ChatSystem } from "@/components/ui/ChatSystem";
-import { Loader } from "@/components/ui/Loader";
+import { OtherPlayer } from "./character/OtherPlayer";
 
 export default function MetaverseWorld() {
     const isStarted = useGameStore((state) => state.isStarted);
     const setIsStarted = useGameStore((state) => state.setIsStarted);
+    const otherPlayers = useGameStore((state) => state.otherPlayers); // 접속자 목록
+
+    // 소켓 연결 활성화
+    useSocket();
 
     return (
         <div className="w-full h-screen bg-black overflow-hidden relative">
@@ -31,6 +29,15 @@ export default function MetaverseWorld() {
                         <Plane rotation={[-Math.PI / 2, 0, 0]} />
                         <GroupCube />
                         <Player />
+                        {/* 다른 유저들 렌더링 */}
+                        {Object.values(otherPlayers).map((player) => (
+                            <OtherPlayer
+                                key={player.id}
+                                id={player.id}
+                                position={player.position}
+                                action={player.action}
+                            />
+                        ))}
                     </Physics>
 
                     <MoviePlane position={[0, 7, -20]} />

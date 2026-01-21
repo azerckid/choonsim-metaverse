@@ -16,6 +16,12 @@ interface LightingSettings {
   environmentPreset: "city" | "warehouse" | "apartment" | "forest" | "lobby" | "night" | "park" | "studio" | "sunset" | "dawn";
 }
 
+interface OtherPlayer {
+  id: string;
+  position: PlayerPosition;
+  action?: string; // 다른 플레이어의 애니메이션 상태 (Run, Idle 등)
+}
+
 interface GameState {
   // 키보드 입력 상태
   keyPressed: Record<string, boolean>;
@@ -30,6 +36,9 @@ interface GameState {
   // 조명 설정
   lighting: LightingSettings;
 
+  // 멀티플레이어 상태
+  otherPlayers: Record<string, OtherPlayer>;
+
   // Actions
   setKeyPressed: (keys: Record<string, boolean>) => void;
   setAction: (action: string) => void;
@@ -37,6 +46,11 @@ interface GameState {
   setDirectionOffset: (offset: number) => void;
   setIsStarted: (isStarted: boolean) => void;
   setLighting: (settings: Partial<LightingSettings>) => void;
+
+  // 멀티플레이어 액션
+  setOtherPlayers: (players: Record<string, OtherPlayer>) => void;
+  updateOtherPlayerPosition: (id: string, position: PlayerPosition) => void;
+  removeOtherPlayer: (id: string) => void;
 }
 
 export const useGameStore = create<GameState>()(
@@ -56,6 +70,8 @@ export const useGameStore = create<GameState>()(
       environmentPreset: "city",
     },
 
+    otherPlayers: {},
+
     setKeyPressed: (keys) => set({ keyPressed: keys }),
     setAction: (action) => set({ action }),
     setPlayerPosition: (position) => set({ playerPosition: position }),
@@ -64,5 +80,22 @@ export const useGameStore = create<GameState>()(
     setLighting: (settings) => set((state) => ({
       lighting: { ...state.lighting, ...settings }
     })),
+
+    setOtherPlayers: (players) => set({ otherPlayers: players }),
+    updateOtherPlayerPosition: (id, position) => set((state) => ({
+      otherPlayers: {
+        ...state.otherPlayers,
+        [id]: {
+          ...state.otherPlayers[id],
+          id, // ensure id exists if creating new
+          position
+        }
+      }
+    })),
+    removeOtherPlayer: (id) => set((state) => {
+      const newPlayers = { ...state.otherPlayers };
+      delete newPlayers[id];
+      return { otherPlayers: newPlayers };
+    }),
   }))
 );
