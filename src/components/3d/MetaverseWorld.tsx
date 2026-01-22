@@ -35,7 +35,11 @@ export default function MetaverseWorld() {
         console.log("Joining with nickname:", nickname);
         // 서버로 닉네임 전송 및 게임 참여 요청
         if (!socket.connected) socket.connect();
-        socket.emit("join", { nickname: nickname.trim() });
+        // 가이드: join 이벤트 시 초기 좌표 전송 필요
+        socket.emit("join", {
+            nickname: nickname.trim(),
+            x: 0, y: 0, z: 0
+        });
 
         setIsStarted(true);
     };

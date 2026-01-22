@@ -25,6 +25,8 @@ export function ChatSystem() {
     const scrollRef = useRef<HTMLDivElement>(null);
     const [isOpen, setIsOpen] = useState(false);
 
+    const otherPlayers = useGameStore((state) => state.otherPlayers); // 다른 유저 정보 가져오기
+
     // 임시 사용자 ID 제거 (socket.id 사용)
 
     useEffect(() => {
@@ -36,10 +38,15 @@ export function ChatSystem() {
         }
 
         // 메시지 수신 이벤트 핸들러
-        const handleMessage = (data: { id: string; sender: string; message: string; timestamp?: number }) => {
+        // 가이드: chatMessage 이벤트 (수신 데이터: { id, message })
+        const handleMessage = (data: { id: string; message: string; sender?: string; timestamp?: number }) => {
+
+            // sender가 없으면 otherPlayers에서 id로 조회, 그래도 없으면 id의 앞부분 사용
+            const senderName = data.sender || otherPlayers[data.id]?.nickname || "Unknown";
+
             const newMessage: ChatMessage = {
                 id: Math.random().toString(36).substr(2, 9),
-                sender: data.sender, // 닉네임
+                sender: senderName,
                 message: data.message,
                 timestamp: data.timestamp || Date.now(),
                 isMe: data.id === socket.id, // socket.id로 내 메시지 확인
@@ -53,12 +60,12 @@ export function ChatSystem() {
             }
         };
 
-        socket.on("chat", handleMessage);
+        socket.on("chatMessage", handleMessage);
 
         return () => {
-            socket.off("chat", handleMessage);
+            socket.off("chatMessage", handleMessage);
         };
-    }, [isStarted, isOpen]);
+    }, [isStarted, isOpen, otherPlayers]);
 
     // 자동 스크롤
     useEffect(() => {
@@ -74,7 +81,8 @@ export function ChatSystem() {
         if (!inputValue.trim()) return;
 
         // 서버로 메시지 전송 (id, sender, timestamp는 서버가 부여함)
-        socket.emit("chat", { message: inputValue.trim() });
+        // 가이드: 데이터 예시 "안녕하세요!" (문자열 전송)
+        socket.emit("chatMessage", inputValue.trim());
 
         setInputValue("");
     };
