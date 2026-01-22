@@ -7,9 +7,10 @@ import { Physics } from "@react-three/cannon";
 import { LightControl } from "./environment/LightControl";
 import { Plane } from "./environment/Plane";
 import { GroupCube } from "./interaction/GroupCube";
+import { DestinationMarker } from "./interaction/DestinationMarker";
+
 import { MoviePlane } from "./environment/MoviePlane";
 import { OtherPlayer } from "./character/OtherPlayer";
-import { OtherPlayer as OtherPlayerType } from "@/store/useGameStore"; // 타입 import 충돌 방지
 import { Player } from "./character/Player";
 import { useGameStore } from "@/store/useGameStore";
 import { Button } from "@/components/ui/button";
@@ -27,19 +28,28 @@ export default function MetaverseWorld() {
     const setMyNickname = useGameStore((state) => state.setMyNickname);
     const [nickname, setNickname] = useState("");
 
+    // Store Actions for Click Move
+    const setTargetPosition = useGameStore((state) => state.setTargetPosition);
+    const setIsAutoMoving = useGameStore((state) => state.setIsAutoMoving);
+
     // 소켓 연결 활성화
     useSocket();
 
     const handleJoin = () => {
         if (!nickname.trim()) return;
-
-        console.log("Joining with nickname:", nickname);
-
-        // 1. 내 닉네임 저장 (useSocket에서 감지하여 join 수행)
         setMyNickname(nickname.trim());
-
-        // 2. 게임 시작 상태 변경
         setIsStarted(true);
+    };
+
+    // 바닥 클릭 핸들러
+    const handlePlaneClick = (e: any) => {
+        // 이동 가능한 바닥을 클릭했을 때만 동작
+        const point = e.point;
+        // console.log("Moving to:", point);
+
+        setTargetPosition(point);
+        setIsAutoMoving(true);
+        e.stopPropagation();
     };
 
     return (
@@ -50,7 +60,12 @@ export default function MetaverseWorld() {
                 <Suspense fallback={null}>
                     <Physics gravity={[0, -9.81, 0]}>
                         <LightControl />
-                        <Plane rotation={[-Math.PI / 2, 0, 0]} />
+
+                        {/* 바닥 (클릭 이벤트 추가) */}
+                        <group onClick={handlePlaneClick}>
+                            <Plane rotation={[-Math.PI / 2, 0, 0]} />
+                        </group>
+
                         <GroupCube />
                         <Player nickname={nickname} />
                         {/* 다른 유저들 렌더링 */}
@@ -63,6 +78,9 @@ export default function MetaverseWorld() {
                                 nickname={player.nickname}
                             />
                         ))}
+
+                        {/* 클릭 마커 */}
+                        <DestinationMarker />
                     </Physics>
 
                     <MoviePlane position={[0, 7, -20]} />

@@ -49,12 +49,15 @@ interface GameState {
 }
 ```
 
-#### 2. 클릭 감지 (Interaction Layer)
-`src/components/3d/environment/Plane.tsx` (바닥 컴포넌트)에 `onClick` 이벤트를 추가합니다.
+#### 2. 클릭 감지 및 시각적 피드백 (Interaction & Visual Feedback)
+`src/components/3d/environment/Plane.tsx` (바닥) 클릭 이벤트를 처리하고 마커를 표시합니다.
 
 - **이벤트**: `onClick={(e) => moveTo(e.point)}`
-- **동작**: 클릭된 지점의 3D 좌표(`e.point`)를 받아 Store의 `targetPosition`을 업데이트하고 `isAutoMoving`을 `true`로 설정합니다.
-- **시각적 피드백**: (선택 사항) 클릭한 지점에 잠시 '타겟 마커'를 표시하면 사용자 경험이 향상됩니다.
+- **동작**: 클릭된 지점의 3D 좌표(`e.point`)를 받아 Store의 `targetPosition`을 업데이트합니다.
+- **마커 표시 (필수)**:
+    - `src/components/3d/interaction/DestinationMarker.tsx` 컴포넌트 신규 생성.
+    - Store의 `targetPosition`이 존재할 때만 렌더링.
+    - **동작**: 바닥 클릭 시 마커 표시 -> 캐릭터 이동 -> 도착 시 Store에서 `targetPosition`을 `null`로 초기화 -> 마커 자동 소멸.
 
 #### 3. 이동 로직 (Movement Logic)
 `src/components/3d/character/Player.tsx`의 `useFrame` 내부 로직을 확장합니다.

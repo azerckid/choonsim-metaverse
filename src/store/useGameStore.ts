@@ -1,6 +1,8 @@
 import { create } from "zustand";
 import { subscribeWithSelector } from "zustand/middleware";
 
+import * as THREE from "three";
+
 export interface PlayerPosition {
   x: number;
   y: number;
@@ -37,6 +39,10 @@ interface GameState {
   // 조명 설정
   lighting: LightingSettings;
 
+  // 클릭 이동 상태
+  targetPosition: THREE.Vector3 | null;
+  isAutoMoving: boolean;
+
   // 멀티플레이어 상태
   otherPlayers: Record<string, OtherPlayer>;
   myNickname: string;
@@ -48,6 +54,8 @@ interface GameState {
   setDirectionOffset: (offset: number) => void;
   setIsStarted: (isStarted: boolean) => void;
   setLighting: (settings: Partial<LightingSettings>) => void;
+  setTargetPosition: (pos: THREE.Vector3 | null) => void;
+  setIsAutoMoving: (isAutoMoving: boolean) => void;
 
   // 멀티플레이어 액션
   setOtherPlayers: (players: Record<string, OtherPlayer>) => void;
@@ -73,10 +81,22 @@ export const useGameStore = create<GameState>()(
       environmentPreset: "city",
     },
 
+    // 클릭 이동 상태
+    targetPosition: null,
+    isAutoMoving: false,
+
     otherPlayers: {},
     myNickname: "",
 
-    setKeyPressed: (keys) => set({ keyPressed: keys }),
+    setKeyPressed: (keys) => {
+      // 키보드 입력이 발생하면 자동 이동 취소
+      const hasInput = Object.values(keys).some(v => v);
+      return set((state) => ({
+        keyPressed: keys,
+        isAutoMoving: hasInput ? false : state.isAutoMoving,
+        targetPosition: hasInput ? null : state.targetPosition
+      }));
+    },
     setAction: (action) => set({ action }),
     setPlayerPosition: (position) => set({ playerPosition: position }),
     setDirectionOffset: (offset) => set({ directionOffset: offset }),
@@ -84,6 +104,8 @@ export const useGameStore = create<GameState>()(
     setLighting: (settings) => set((state) => ({
       lighting: { ...state.lighting, ...settings }
     })),
+    setTargetPosition: (pos) => set({ targetPosition: pos }),
+    setIsAutoMoving: (isAutoMoving) => set({ isAutoMoving }),
 
     setOtherPlayers: (players) => set({ otherPlayers: players }),
     setMyNickname: (nickname) => set({ myNickname: nickname }),
