@@ -38,32 +38,28 @@ export function ChatSystem() {
         }
 
         // 메시지 수신 이벤트 핸들러
-        // 가이드: chatMessage 이벤트 (수신 데이터: { id, message })
-        const handleMessage = (data: { id: string; message: string; sender?: string; timestamp?: number }) => {
-
-            // sender가 없으면 otherPlayers에서 id로 조회, 그래도 없으면 id의 앞부분 사용
-            const senderName = data.sender || otherPlayers[data.id]?.nickname || "Unknown";
+        // 서버 코드 기준: chat 이벤트 (수신 데이터: { id, sender, message, timestamp })
+        const handleMessage = (data: { id: string; message: string; sender: string; timestamp: number }) => {
 
             const newMessage: ChatMessage = {
-                id: Math.random().toString(36).substr(2, 9),
-                sender: senderName,
+                id: data.id,
+                sender: data.sender || "Anonymous",
                 message: data.message,
-                timestamp: data.timestamp || Date.now(),
-                isMe: data.id === socket.id, // socket.id로 내 메시지 확인
+                timestamp: data.timestamp,
+                isMe: data.id === socket.id,
             };
 
             setMessages((prev) => [...prev, newMessage]);
 
-            // 채팅창이 닫혀있으면 알림 표시 등의 로직을 여기에 추가 가능
             if (!isOpen) {
-                // 간단한 알림 효과?
+                // 알림 로직
             }
         };
 
-        socket.on("chatMessage", handleMessage);
+        socket.on("chat", handleMessage);
 
         return () => {
-            socket.off("chatMessage", handleMessage);
+            socket.off("chat", handleMessage);
         };
     }, [isStarted, isOpen, otherPlayers]);
 
@@ -80,9 +76,8 @@ export function ChatSystem() {
     const handleSend = () => {
         if (!inputValue.trim()) return;
 
-        // 서버로 메시지 전송 (id, sender, timestamp는 서버가 부여함)
-        // 가이드: 데이터 예시 "안녕하세요!" (문자열 전송)
-        socket.emit("chatMessage", inputValue.trim());
+        // 서버 코드 기준: chat 이벤트, 데이터: { message: string }
+        socket.emit("chat", { message: inputValue.trim() });
 
         setInputValue("");
     };

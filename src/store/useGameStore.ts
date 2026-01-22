@@ -39,6 +39,7 @@ interface GameState {
 
   // 멀티플레이어 상태
   otherPlayers: Record<string, OtherPlayer>;
+  myNickname: string;
 
   // Actions
   setKeyPressed: (keys: Record<string, boolean>) => void;
@@ -50,6 +51,7 @@ interface GameState {
 
   // 멀티플레이어 액션
   setOtherPlayers: (players: Record<string, OtherPlayer>) => void;
+  setMyNickname: (nickname: string) => void;
   updateOtherPlayerPosition: (id: string, position: PlayerPosition, action?: string, nickname?: string) => void;
   removeOtherPlayer: (id: string) => void;
 }
@@ -72,6 +74,7 @@ export const useGameStore = create<GameState>()(
     },
 
     otherPlayers: {},
+    myNickname: "",
 
     setKeyPressed: (keys) => set({ keyPressed: keys }),
     setAction: (action) => set({ action }),
@@ -83,6 +86,7 @@ export const useGameStore = create<GameState>()(
     })),
 
     setOtherPlayers: (players) => set({ otherPlayers: players }),
+    setMyNickname: (nickname) => set({ myNickname: nickname }),
     updateOtherPlayerPosition: (id, position, action = "Idle", nickname) => set((state) => ({
       otherPlayers: {
         ...state.otherPlayers,

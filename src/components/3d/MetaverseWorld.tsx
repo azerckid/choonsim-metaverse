@@ -24,6 +24,7 @@ export default function MetaverseWorld() {
     const isStarted = useGameStore((state) => state.isStarted);
     const setIsStarted = useGameStore((state) => state.setIsStarted);
     const otherPlayers = useGameStore((state) => state.otherPlayers); // 접속자 목록
+    const setMyNickname = useGameStore((state) => state.setMyNickname);
     const [nickname, setNickname] = useState("");
 
     // 소켓 연결 활성화
@@ -33,14 +34,11 @@ export default function MetaverseWorld() {
         if (!nickname.trim()) return;
 
         console.log("Joining with nickname:", nickname);
-        // 서버로 닉네임 전송 및 게임 참여 요청
-        if (!socket.connected) socket.connect();
-        // 가이드: join 이벤트 시 초기 좌표 전송 필요
-        socket.emit("join", {
-            nickname: nickname.trim(),
-            x: 0, y: 0, z: 0
-        });
 
+        // 1. 내 닉네임 저장 (useSocket에서 감지하여 join 수행)
+        setMyNickname(nickname.trim());
+
+        // 2. 게임 시작 상태 변경
         setIsStarted(true);
     };
 
