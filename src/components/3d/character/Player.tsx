@@ -25,6 +25,7 @@ export function Player({ nickname }: PlayerProps) {
     const playerPosition = useGameStore((state) => state.playerPosition);
     const action = useGameStore((state) => state.action);
     const setAction = useGameStore((state) => state.setAction);
+    const isAutoMoving = useGameStore((state) => state.isAutoMoving); // 자동 이동 상태 구독
 
     // Physics body (currently purely for collision if needed, but movement is manual in original)
     const [refCannon] = useBox(() => ({
@@ -38,7 +39,8 @@ export function Player({ nickname }: PlayerProps) {
 
         if (isMoving) {
             if (action !== "Run") setAction("Run");
-        } else {
+        } else if (!isAutoMoving) {
+            // 키보드 이동도 아니고 자동 이동도 아닐 때만 Idle 전환
             if (action !== "Idle") setAction("Idle");
         }
 
